@@ -10,8 +10,8 @@ const config_1 = require("./config");
 const logger_1 = require("./utils/logger");
 class App {
     constructor(routers) {
-        this.routers = routers;
         this.app = (0, express_1.default)();
+        this.routers = routers;
         this.initializeRoutes();
     }
     initializeRoutes() {
