@@ -1,0 +1,22 @@
+{
+  "name": "erp-supportive-backend",
+  "version": "1.0.0",
+  "description": "this is college erp backend.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevit-kunj-vaishnani/ERP-Project.git"
+  },
+  "keywords": [
+    "erp"
+  ],
+  "author": "Kunj",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kevit-kunj-vaishnani/ERP-Project/issues"
+  },
+  "homepage": "https://github.com/kevit-kunj-vaishnani/ERP-Project#readme"
+}
