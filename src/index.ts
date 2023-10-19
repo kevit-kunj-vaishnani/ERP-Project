@@ -1,7 +1,7 @@
-import {app} from './app';
-import {server} from './config';
-import {logger} from './utils/logger';
+import {App} from './app';
+import {router as pingRouter} from './ping';
 
-app.listen(server.port, () => {
-  logger.info('app is running on port ' + server.port);
-});
+const app = new App([pingRouter]);
+console.log('jdsic');
+
+app.listen();
