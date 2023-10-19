@@ -1,4 +1,4 @@
-require('dotenv').config()
-import express, { Application } from 'express'
+require('dotenv').config();
+import express, {Application} from 'express';
 
-export const app : Application = express();
+export const app: Application = express();
