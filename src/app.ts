@@ -1,11 +1,12 @@
 require('dotenv').config();
 import express, {Application, Router} from 'express';
 import {server} from './config';
+import {mongoConn} from './config';
 import {logger} from './utils/logger';
 import mongoose from 'mongoose';
 
-const mongoUrl: string = server.url;
-
+const mongoUrl: string = mongoConn.url;
+const databaseName: string = mongoConn.db_name;
 export class App {
   private app: Application;
   private routers: Router[];
@@ -32,7 +33,7 @@ export class App {
   }
 
   // mongoSetup method declared here which is called from constructor for connecting with database
-  public mongoSetup() {
+  protected mongoSetup() {
     mongoose.connection.on('connected', () => {
       logger.info('Database Connected Successfully');
     });
@@ -41,11 +42,6 @@ export class App {
       logger.info(`Database error : ${err}`);
     });
 
-    const dbOptions = {
-      maxPoolSize: 5,
-      useNewUrlParser: true
-    };
-
-    mongoose.connect(mongoUrl, dbOptions);
+    mongoose.connect(`${mongoUrl}${databaseName}`);
   }
 }
