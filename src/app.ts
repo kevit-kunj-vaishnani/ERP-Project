@@ -19,27 +19,31 @@ export class App {
   }
 
   // initializeRoutes method declared here which is called from constructor
-  initializeRoutes() {
+  public initializeRoutes() {
     this.routers.forEach((router) => {
       this.app.use('/', router);
     });
   }
 
   // listen method declared here which is called from constructor for listening port
-  listen() {
+  public listen() {
     this.app.listen(server.port, () => {
       logger.info(`app is running on port ${server.port}`);
     });
   }
 
   // mongoSetup method declared here which is called from constructor for connecting with database
-  protected mongoSetup() {
+  public mongoSetup() {
     mongoose.connection.on('connected', () => {
       logger.info('Database Connected Successfully');
     });
 
     mongoose.connection.on('error', (err) => {
       logger.info(`Database error : ${err}`);
+    });
+
+    mongoose.connection.on('disconnected', () => {
+      logger.warn(`Database disconnected...!`);
     });
 
     mongoose.connect(`${mongoUrl}${databaseName}`);
