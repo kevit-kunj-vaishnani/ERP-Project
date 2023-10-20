@@ -3,6 +3,7 @@ import {getUsers} from './user.controllers';
 
 const router = Router();
 
-router.get('/users', getUsers);
+const route = 'users';
+router.get(`/${route}`, getUsers);
 
 export {router};
