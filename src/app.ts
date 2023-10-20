@@ -15,7 +15,7 @@ export class App {
     this.routers = routers;
     this.app = express();
     this.initializeRoutes();
-    this.mongoSetup();
+    this.mongooseSetup();
   }
 
   // initializeRoutes method declared here which is called from constructor
@@ -33,7 +33,7 @@ export class App {
   }
 
   // mongoSetup method declared here which is called from constructor for connecting with database
-  public mongoSetup() {
+  public mongooseSetup() {
     mongoose.connection.on('connected', () => {
       logger.info('Database Connected Successfully');
     });
