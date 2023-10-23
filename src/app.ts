@@ -4,7 +4,7 @@ import express, {Application, Router} from 'express';
 import {server} from './config';
 import {mongoConn} from './config';
 import {logger} from './utils/logger';
-import ErrorHandler from './middleware/error-handler';
+import {errorHandler} from './middleware/error-handler';
 
 const mongoUrl: string = mongoConn.url;
 const databaseName: string = mongoConn.db_name;
@@ -16,7 +16,14 @@ export class App {
     this.routers = routers;
     this.app = express();
     this.initializeRoutes();
+    this.initializeMiddleware();
     this.mongooseSetup();
+    this.initializeErrorHandle();
+  }
+
+  // initializeErrorHandle method declared here which is called from constructor
+  public initializeMiddleware() {
+    this.app.use(express.json());
   }
 
   // initializeRoutes method declared here which is called from constructor
@@ -24,7 +31,12 @@ export class App {
     this.routers.forEach((router) => {
       this.app.use('/', router);
     });
-    this.app.use(ErrorHandler);
+    this.app.use(errorHandler);
+  }
+
+  // initializeErrorHandle method declared here which is called from constructor
+  public initializeErrorHandle() {
+    this.app.use(errorHandler);
   }
 
   // listen method declared here which is called from constructor for listening port
