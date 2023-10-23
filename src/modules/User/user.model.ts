@@ -1,4 +1,5 @@
 import mongoose, {Schema} from 'mongoose';
+import bcrypt from 'bcryptjs';
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -16,7 +17,6 @@ const userSchema = new mongoose.Schema({
 
   password: {
     type: String,
-    trim: true,
     required: true
   },
 
@@ -27,14 +27,14 @@ const userSchema = new mongoose.Schema({
 
   designation: {
     type: String,
-    trim: true,
     required: true
   },
 
   department: {
-    type: Schema.Types.ObjectId,
+    type: String,
     trim: true,
     required: true
+    // ref: ''
   },
 
   isAdmin: {
@@ -45,6 +45,16 @@ const userSchema = new mongoose.Schema({
   authToken: {
     type: String
   }
+});
+
+// for making password a hashpassword. this will be done when we create new user and update user
+// save is in-built method . so when we will call save method in routes user it will do what we have defined here + what it is originally used for
+userSchema.pre('save', async function (next) {
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 10);
+  }
+
+  next();
 });
 
 export const User = mongoose.model('User', userSchema); // User is a model name , userSchema is mongoose schema name

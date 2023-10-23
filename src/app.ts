@@ -15,9 +15,9 @@ export class App {
   constructor(routers: Router[]) {
     this.app = express();
     this.routers = routers;
+    this.initializeMiddleware();
     this.initializeRoutes();
     this.mongooseSetup();
-    this.initializeMiddleware();
     this.initializeErrorHandle();
   }
 
