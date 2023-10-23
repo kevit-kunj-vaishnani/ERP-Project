@@ -8,9 +8,9 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction):
 
     if (users.length === 0) {
       throw customError(404, 'no user available');
-    } else {
-      return res.status(200).send(users);
     }
+
+    return res.status(200).send(users);
   } catch (err) {
     next(err);
   }

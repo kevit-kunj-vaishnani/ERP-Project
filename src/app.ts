@@ -16,8 +16,8 @@ export class App {
     this.routers = routers;
     this.app = express();
     this.initializeRoutes();
-    this.initializeMiddleware();
     this.mongooseSetup();
+    this.initializeMiddleware();
     this.initializeErrorHandle();
   }
 
@@ -31,7 +31,6 @@ export class App {
     this.routers.forEach((router) => {
       this.app.use('/', router);
     });
-    this.app.use(errorHandler);
   }
 
   // initializeErrorHandle method declared here which is called from constructor
