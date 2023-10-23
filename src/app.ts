@@ -13,8 +13,8 @@ export class App {
   private routers: Router[];
 
   constructor(routers: Router[]) {
-    this.routers = routers;
     this.app = express();
+    this.routers = routers;
     this.initializeRoutes();
     this.mongooseSetup();
     this.initializeMiddleware();
