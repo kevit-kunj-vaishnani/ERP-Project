@@ -5,7 +5,7 @@ import {findUserById} from '../modules/User/user.services';
 import {Request, Response, NextFunction, json} from 'express';
 import {customError} from '../utils/error';
 import {logger} from '../utils/logger';
-import jwt, {JwtPayload} from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.header('Authorization').replace('Bearer ', '');
@@ -23,13 +23,12 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
 
     const user = await findUserById(_id);
     if (token !== user.authToken) {
-      throw 'Un-Authenticated';
+      throw customError(401, 'Unauthenticated');
     }
-
     req['data'] = {_id, role};
     next();
   } catch (error) {
     logger.error(`Error occurred while authentication - ${error}`);
-    next(customError(401, error));
+    next(error);
   }
 };

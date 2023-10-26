@@ -42,7 +42,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
     return res.status(200).send({success: true, data: user});
   } catch (err) {
-    logger.info(`Error in add ${err}`);
+    logger.error(`Error in add ${err}`);
     next(err);
   }
 };
@@ -58,14 +58,16 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
 
     return res.status(200).send({success: true, data: user});
   } catch (error) {
-    logger.info(`Error in fetching user ${error}`);
+    logger.error(`Error in fetching user ${error}`);
     next(error);
   }
 };
 
+// only password can be updated ( by staff , admin )
 export const getUserByIdAndUpdate = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
-    const user = await findUserByIdAndUpdate(req.params.id);
+    const {_id} = req['data'];
+    const user = await findUserByIdAndUpdate(_id);
 
     if (!user) {
       throw customError(404, 'user not found');
@@ -73,7 +75,47 @@ export const getUserByIdAndUpdate = async (req: Request, res: Response, next: Ne
 
     logger.info(`old user = ${user}`);
 
-    // i = property 1,2,3,..
+    // // if role = staff then only password she can update
+    // if (user.role === 'STAFF') {
+    //   user.password = req.body.password;
+    // } else if (user.role === 'ADMIN') {
+    //   // if role = admin then everything she can update
+    //   // i = property 1,2,3,..
+    //   for (const i in req.body) {
+    //     user[i] = req.body[i];
+    //   }
+    // }
+
+    if (!req.body.password) {
+      logger.error(`you can update only password field.`);
+      throw customError(400, 'you can update only password field. ');
+    }
+
+    user.password = req.body.password;
+
+    logger.info(`updated user = ${user}`);
+
+    await user.save();
+
+    return res.status(200).send({success: true, data: user});
+  } catch (error) {
+    logger.error(`Error in updating Password ${error}`);
+    next(error);
+  }
+};
+
+// any field can be updated (by admin only)
+export const getUserByIdAndUpdateAll = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+  try {
+    const {_id} = req['data'];
+    const user = await findUserByIdAndUpdate(_id);
+
+    if (!user) {
+      throw customError(404, 'user not found');
+    }
+
+    logger.info(`old user = ${user}`);
+
     for (const i in req.body) {
       user[i] = req.body[i];
     }
@@ -84,7 +126,7 @@ export const getUserByIdAndUpdate = async (req: Request, res: Response, next: Ne
 
     return res.status(200).send({success: true, data: user});
   } catch (error) {
-    logger.info(`Error in update ${error}`);
+    logger.error(`Error in update ${error}`);
     next(error);
   }
 };
@@ -101,7 +143,7 @@ export const getUserByIdAndDelete = async (req: Request, res: Response, next: Ne
 
     return res.status(200).send({success: true, data: user});
   } catch (error) {
-    logger.info(`Error in deleting user ${error}`);
+    logger.error(`Error in deleting user ${error}`);
     next(error);
   }
 };
@@ -110,15 +152,11 @@ export const getUserByIdAndDelete = async (req: Request, res: Response, next: Ne
 // findByCredentials is function we have made so we have to write static
 export const userLogin = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
-    if (!req.body.email || !req.body.password) {
-      logger.error('email or password missing');
-      throw customError(400, 'email or password missing');
-    }
     const user = await findUserByEmail(req.body.email);
     if (!user) {
       throw customError(404, 'user not found');
     }
-    logger.info(user);
+
     const did_Password_Match = await bcrypt.compare(req.body.password, user.password);
 
     if (!did_Password_Match) {
@@ -134,7 +172,7 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
     await user.save();
     return res.status(200).send({success: true, data: user});
   } catch (error) {
-    logger.info(`Error in Login ${error}`);
+    logger.error(`Error in Login ${error}`);
     next(error);
   }
 };
@@ -146,16 +184,34 @@ export const logoutUser = async (req: Request, res: Response, next: NextFunction
 
     const user = await findUserById(_id);
     if (!user) {
-      logger.info('hi');
       throw customError(404, 'User not found');
     }
-    logger.info('hi3');
 
     user.authToken = undefined;
     user.save();
     return res.status(200).send({success: true, data: user});
   } catch (error) {
     logger.error(`Error while logout a user: ${error}`);
+    next(error);
+  }
+};
+
+// fetch information of login user
+export const myself = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+  try {
+    logger.warn('hi');
+    const {_id} = req['data'];
+
+    const user = await findUserById(_id);
+
+    if (!user) {
+      logger.info('User not found');
+      throw customError(404, 'User not found');
+    }
+
+    return res.status(200).send({success: true, data: user});
+  } catch (error) {
+    logger.error(`Error in getting myself: ${error}`);
     next(error);
   }
 };
