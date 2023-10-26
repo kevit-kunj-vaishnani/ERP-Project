@@ -1,5 +1,6 @@
 import mongoose, {Schema} from 'mongoose';
 import bcrypt from 'bcryptjs';
+import {Roles} from '../../interfaces';
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -37,8 +38,8 @@ const userSchema = new mongoose.Schema({
     // ref: ''
   },
 
-  isAdmin: {
-    type: Boolean,
+  role: {
+    type: String,
     required: true
   },
 
@@ -49,12 +50,30 @@ const userSchema = new mongoose.Schema({
 
 // for making password a hashpassword. this will be done when we create new user and update user
 // save is in-built method . so when we will call save method in routes user it will do what we have defined here + what it is originally used for
+// here we have to use normal function instead of arrow function because this does not bind with this keyword
 userSchema.pre('save', async function (next) {
-  if (this.isModified('password')) {
-    this.password = await bcrypt.hash(this.password, 10);
-  }
+  try {
+    if (this.isModified('password')) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
 
-  next();
+    switch (this.role) {
+      case 'ADMIN':
+        this.role = Roles.ADMIN;
+        break;
+
+      case 'STAFF':
+        this.role = Roles.STAFF;
+        break;
+
+      default:
+        break;
+    }
+
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
 export const User = mongoose.model('User', userSchema); // User is a model name , userSchema is mongoose schema name
