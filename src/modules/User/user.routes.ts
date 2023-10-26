@@ -30,7 +30,7 @@ router.post(`/${route}/add`, auth, authorization(['ADMIN']), createUser);
 router.patch(`/${route}/update/myself`, auth, authorization(['ADMIN', 'STAFF']), getUserByIdAndUpdate);
 
 // update everything of user
-router.patch(`/${route}/update/all`, auth, authorization(['ADMIN']), getUserByIdAndUpdateAll);
+router.patch(`/${route}/update/:id`, auth, authorization(['ADMIN']), getUserByIdAndUpdateAll);
 
 // delete user
 router.delete(`/${route}/delete/:id`, auth, authorization(['ADMIN']), getUserByIdAndDelete);

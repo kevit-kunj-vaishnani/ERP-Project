@@ -107,8 +107,8 @@ export const getUserByIdAndUpdate = async (req: Request, res: Response, next: Ne
 // any field can be updated (by admin only)
 export const getUserByIdAndUpdateAll = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
-    const {_id} = req['data'];
-    const user = await findUserByIdAndUpdate(_id);
+    // const {_id} = req['data'];
+    const user = await findUserByIdAndUpdate(req.params.id);
 
     if (!user) {
       throw customError(404, 'user not found');
