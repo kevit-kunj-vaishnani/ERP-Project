@@ -1,6 +1,7 @@
 require('dotenv').config();
 import mongoose from 'mongoose';
 import express, {Application, Router} from 'express';
+import cors from 'cors';
 import {server} from './config';
 import {mongoConn} from './config';
 import {logger} from './utils/logger';
@@ -24,6 +25,24 @@ export class App {
   // initializeErrorHandle method declared here which is called from constructor
   public initializeMiddleware() {
     this.app.use(express.json());
+    this.app.use(
+      cors({
+        origin: true,
+        methods: ['OPTIONS', 'GET', 'POST', 'DELETE', 'PATCH'],
+        allowedHeaders: [
+          'Origin',
+          'Host',
+          'Content-Language',
+          'Content-Type',
+          'Content-Length',
+          'Accept',
+          'User-Agent',
+          'Accept-Encoding',
+          'Authorization'
+        ],
+        Credential: true
+      })
+    );
   }
 
   // initializeRoutes method declared here which is called from constructor

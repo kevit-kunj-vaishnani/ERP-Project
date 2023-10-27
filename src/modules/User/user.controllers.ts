@@ -19,11 +19,11 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction):
   try {
     const users = await findUsers();
 
-    if (users.length === 0) {
-      throw customError(404, 'no user available');
-    }
+    // if (users.length === 0) {
+    //   throw customError(404, 'no user available');
+    // }
 
-    return res.status(200).send({success: true, data: users});
+    return res.status(200).send({success: true, data: users || 'no user available'});
   } catch (err) {
     next(err);
     //error comes from services to controller and from controller it goes to error-handler
@@ -51,12 +51,12 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
   try {
     const user = await findUserById(req.params.id);
 
-    if (!user) {
-      throw customError(404, 'no user available');
-    }
+    // if (!user) {
+    //   throw customError(404, 'no user available');
+    // }
     logger.info({user});
 
-    return res.status(200).send({success: true, data: user});
+    return res.status(200).send({success: true, data: user || 'no user available'});
   } catch (error) {
     logger.error(`Error in fetching user ${error}`);
     next(error);
@@ -69,9 +69,9 @@ export const getUserByIdAndUpdate = async (req: Request, res: Response, next: Ne
     const {_id} = req['data'];
     const user = await findUserByIdAndUpdate(_id);
 
-    if (!user) {
-      throw customError(404, 'user not found');
-    }
+    // if (!user) {
+    //   throw customError(404, 'user not found');
+    // }
 
     logger.info(`old user = ${user}`);
 
@@ -97,7 +97,7 @@ export const getUserByIdAndUpdate = async (req: Request, res: Response, next: Ne
 
     await user.save();
 
-    return res.status(200).send({success: true, data: user});
+    return res.status(200).send({success: true, data: user || 'no user available'});
   } catch (error) {
     logger.error(`Error in updating Password ${error}`);
     next(error);
@@ -110,9 +110,9 @@ export const getUserByIdAndUpdateAll = async (req: Request, res: Response, next:
     // const {_id} = req['data'];
     const user = await findUserByIdAndUpdate(req.params.id);
 
-    if (!user) {
-      throw customError(404, 'user not found');
-    }
+    // if (!user) {
+    //   throw customError(204, 'user not found');
+    // }
 
     logger.info(`old user = ${user}`);
 
@@ -124,7 +124,7 @@ export const getUserByIdAndUpdateAll = async (req: Request, res: Response, next:
 
     await user.save();
 
-    return res.status(200).send({success: true, data: user});
+    return res.status(200).send({success: true, data: user || 'no user available'});
   } catch (error) {
     logger.error(`Error in update ${error}`);
     next(error);
@@ -135,13 +135,13 @@ export const getUserByIdAndDelete = async (req: Request, res: Response, next: Ne
   try {
     const user = await findUserByIdAndDelete(req.params.id);
 
-    if (!user) {
-      throw customError(404, 'user not found');
-    }
+    // if (!user) {
+    //   throw customError(204, 'user not found');
+    // }
 
     logger.info(`${user.name} is now deleted from database`);
 
-    return res.status(200).send({success: true, data: user});
+    return res.status(200).send({success: true, data: user || 'no user available'});
   } catch (error) {
     logger.error(`Error in deleting user ${error}`);
     next(error);
@@ -153,9 +153,9 @@ export const getUserByIdAndDelete = async (req: Request, res: Response, next: Ne
 export const userLogin = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
     const user = await findUserByEmail(req.body.email);
-    if (!user) {
-      throw customError(404, 'user not found');
-    }
+    // if (!user) {
+    //   throw customError(204, 'user not found');
+    // }
 
     const did_Password_Match = await bcrypt.compare(req.body.password, user.password);
 
@@ -170,7 +170,7 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
 
     user.authToken = token;
     await user.save();
-    return res.status(200).send({success: true, data: user});
+    return res.status(200).send({success: true, data: user || 'no user available'});
   } catch (error) {
     logger.error(`Error in Login ${error}`);
     next(error);
@@ -184,7 +184,7 @@ export const logoutUser = async (req: Request, res: Response, next: NextFunction
 
     const user = await findUserById(_id);
     if (!user) {
-      throw customError(404, 'User not found');
+      throw customError(204, 'User not found');
     }
 
     user.authToken = undefined;
@@ -204,12 +204,12 @@ export const myself = async (req: Request, res: Response, next: NextFunction): P
 
     const user = await findUserById(_id);
 
-    if (!user) {
-      logger.info('User not found');
-      throw customError(404, 'User not found');
-    }
+    // if (!user) {
+    //   logger.info('User not found');
+    //   throw customError(204, 'User not found');
+    // }
 
-    return res.status(200).send({success: true, data: user});
+    return res.status(200).send({success: true, data: user || 'User not found'});
   } catch (error) {
     logger.error(`Error in getting myself: ${error}`);
     next(error);
