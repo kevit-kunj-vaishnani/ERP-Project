@@ -18,7 +18,7 @@ const router = Router();
 const route = 'users';
 
 // get all users
-router.get(`/${route}`, getUsers);
+router.get(`/${route}`, auth, authorization(['ADMIN', 'STAFF']), getUsers);
 
 // get me
 router.get(`/${route}/me`, auth, myself);
