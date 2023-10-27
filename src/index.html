@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fetch Data</title>
+</head>
+<body>
+    <div>
+        <div id="dataDisplay"></div>
+        <script>
+            
+            fetch('http://127.0.0.1:3000/users')
+                .then(response => {
+                   
+                    if (response) {
+                        console.log(response);
+                        return response.text();
+                    } else {
+                        throw new Error('Failed to fetch data');
+                    }
+                })
+                .then(data => {
+                    const dataDisplayElement = document.querySelector('#dataDisplay');
+                    dataDisplayElement.innerText = data;
+                })
+                .catch(error => {
+                    // console.log(error);.
+                });
+
+            
+        </script>
+    </div>
+</body>
+</html>
