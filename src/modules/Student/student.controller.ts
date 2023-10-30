@@ -19,7 +19,7 @@ import {logger} from '../../utils/logger';
  * @param {Request} req => Express Request
  * @param {Response} res => Express Response
  * @param {NextFunction} next => Express NextFunction
- * @returns
+ * @returns {Promise<Response>} => promise with response
  */
 export const getStudents = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -35,7 +35,7 @@ export const getStudents = async (req: Request, res: Response, next: NextFunctio
  * @param {Request} req => Express Request
  * @param {Response} res => Express Response
  * @param {NextFunction} next => Express NextFunction
- * @returns
+ * @returns {Promise<Response>} => promise with response
  */
 export const createStudent = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -52,7 +52,7 @@ export const createStudent = async (req: Request, res: Response, next: NextFunct
  * @param {Request} req => Express Request
  * @param {Response} res => Express Response
  * @param {NextFunction} next => Express NextFunction
- * @returns
+ * @returns {Promise<Response>} => promise with response
  */
 export const getStudentById = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -68,7 +68,7 @@ export const getStudentById = async (req: Request, res: Response, next: NextFunc
  * @param {Request} req => Express Request
  * @param {Response} res => Express Response
  * @param {NextFunction} next => Express NextFunction
- * @returns
+ * @returns {Promise<Response>} => promise with response
  */
 export const getStudentAndUpdate = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -98,7 +98,7 @@ export const getStudentAndUpdate = async (req: Request, res: Response, next: Nex
  * @param {Request} req => Express Request
  * @param {Response} res => Express Response
  * @param {NextFunction} next => Express NextFunction
- * @returns
+ * @returns {Promise<Response>} => promise with response
  */
 export const getStudentByIdAndDelete = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -118,7 +118,7 @@ export const getStudentByIdAndDelete = async (req: Request, res: Response, next:
  * @param {Request} req => Express Request
  * @param {Response} res => Express Response
  * @param {NextFunction} next => Express NextFunction
- * @returns
+ * @returns {Promise<Response>} => promise with response
  */
 export const studentLogin = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -149,7 +149,7 @@ export const studentLogin = async (req: Request, res: Response, next: NextFuncti
  * @param {Request} req => Express Request
  * @param {Response} res => Express Response
  * @param {NextFunction} next => Express NextFunction
- * @returns
+ * @returns {Promise<Response>} => promise with response
  */
 export const studentLogout = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -174,7 +174,7 @@ export const studentLogout = async (req: Request, res: Response, next: NextFunct
  * @param {Request} req => Express Request
  * @param {Response} res => Express Response
  * @param {NextFunction} next => Express NextFunction
- * @returns
+ * @returns {Promise<Response>} => promise with response
  */
 export const myself = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -195,7 +195,7 @@ export const myself = async (req: Request, res: Response, next: NextFunction): P
  * @param {Request} req => Express Request
  * @param {Response} res => Express Response
  * @param {NextFunction} next => Express NextFunction
- * @returns
+ * @returns {Promise<Response>} => promise with response
  */
 export const getStudentByIdAndUpdateAll = async (
   req: Request,

@@ -17,10 +17,10 @@ import {error} from 'winston';
 
 /**
  * get all users ( staff , admin can do )
- * @param req
- * @param res
- * @param next
- * @returns
+ *  @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
+ * @returns {Promise<Response>} => promise with response
  */
 export const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -39,10 +39,10 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction):
 
 /**
  * create new user ( only admin can do )
- * @param req
- * @param res
- * @param next
- * @returns
+ *  @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
+ * @returns {Promise<Response>} => promise with response
  */
 export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -63,10 +63,10 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
 /**
  * get 1 user by id ( staff , admin can do )
- * @param req
- * @param res
- * @param next
- * @returns
+ *  @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
+ * @returns {Promise<Response>} => promise with response
  */
 export const getUserById = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -86,10 +86,10 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
 
 /**
  * find user by id & update only password field ( staff , admin can do )
- * @param req
- * @param res
- * @param next
- * @returns
+ * @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
+ * @returns {Promise<Response>} => promise with response
  */
 export const getUserByIdAndUpdate = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -133,10 +133,10 @@ export const getUserByIdAndUpdate = async (req: Request, res: Response, next: Ne
 
 /**
  * find user by id & update any field ( admin only can do )
- * @param req
- * @param res
- * @param next
- * @returns
+ *  @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
+ * @returns {Promise<Response>} => promise with response
  */
 export const getUserByIdAndUpdateAll = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -166,10 +166,10 @@ export const getUserByIdAndUpdateAll = async (req: Request, res: Response, next:
 
 /**
  * find user by id & delete ( admin can do )
- * @param req
- * @param res
- * @param next
- * @returns
+ *  @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
+ * @returns {Promise<Response>} => promise with response
  */
 export const getUserByIdAndDelete = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -190,10 +190,10 @@ export const getUserByIdAndDelete = async (req: Request, res: Response, next: Ne
 
 /**
  * user login ( any one can do )
- * @param req
- * @param res
- * @param next
- * @returns
+ *  @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
+ * @returns {Promise<Response>} => promise with response
  */
 
 // findByCredentials is function we have made so we have to write static
@@ -226,10 +226,10 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
 
 /**
  * user logout ( who is login )
- * @param req
- * @param res
- * @param next
- * @returns
+ *  @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
+ * @returns {Promise<Response>} => promise with response
  */
 export const logoutUser = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -251,10 +251,10 @@ export const logoutUser = async (req: Request, res: Response, next: NextFunction
 
 /**
  * myself ( who is login )
- * @param req
- * @param res
- * @param next
- * @returns
+ *  @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
+ * @returns {Promise<Response>} => promise with response
  */
 export const myself = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
