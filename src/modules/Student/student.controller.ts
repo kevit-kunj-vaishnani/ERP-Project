@@ -16,9 +16,9 @@ import {logger} from '../../utils/logger';
 
 /**
  * get all students ( staff , admin can do )
- * @param req
- * @param res
- * @param next
+ * @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
  * @returns
  */
 export const getStudents = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
@@ -32,9 +32,9 @@ export const getStudents = async (req: Request, res: Response, next: NextFunctio
 
 /**
  * create new student ( staff , admin can do )
- * @param req
- * @param res
- * @param next
+ * @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
  * @returns
  */
 export const createStudent = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
@@ -49,9 +49,9 @@ export const createStudent = async (req: Request, res: Response, next: NextFunct
 
 /**
  * get 1 student by id ( staff , admin can do )
- * @param req
- * @param res
- * @param next
+ * @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
  * @returns
  */
 export const getStudentById = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
@@ -65,9 +65,9 @@ export const getStudentById = async (req: Request, res: Response, next: NextFunc
 
 /**
  * find student by id & update only password field ( student can do )
- * @param req
- * @param res
- * @param next
+ * @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
  * @returns
  */
 export const getStudentAndUpdate = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
@@ -95,9 +95,9 @@ export const getStudentAndUpdate = async (req: Request, res: Response, next: Nex
 
 /**
  * find student by id & delete ( staff , admin can do )
- * @param req
- * @param res
- * @param next
+ * @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
  * @returns
  */
 export const getStudentByIdAndDelete = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
@@ -115,9 +115,9 @@ export const getStudentByIdAndDelete = async (req: Request, res: Response, next:
 
 /**
  * student login ( any one can do )
- * @param req
- * @param res
- * @param next
+ * @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
  * @returns
  */
 export const studentLogin = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
@@ -146,9 +146,9 @@ export const studentLogin = async (req: Request, res: Response, next: NextFuncti
 
 /**
  * student logout ( who is login )
- * @param req
- * @param res
- * @param next
+ * @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
  * @returns
  */
 export const studentLogout = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
@@ -161,7 +161,7 @@ export const studentLogout = async (req: Request, res: Response, next: NextFunct
     }
 
     student.authToken = undefined;
-    student.save();
+    await student.save();
     return res.status(200).send({success: true, data: student});
   } catch (error) {
     logger.error(`Error while logout a student: ${error}`);
@@ -171,9 +171,9 @@ export const studentLogout = async (req: Request, res: Response, next: NextFunct
 
 /**
  * myself ( who is login )
- * @param req
- * @param res
- * @param next
+ * @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
  * @returns
  */
 export const myself = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
@@ -192,9 +192,9 @@ export const myself = async (req: Request, res: Response, next: NextFunction): P
 // eslint-disable-next-line prettier/prettier
 /**
  * find student by id & update any field ( admin , staff can do )
- * @param req
- * @param res
- * @param next
+ * @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
  * @returns
  */
 export const getStudentByIdAndUpdateAll = async (
