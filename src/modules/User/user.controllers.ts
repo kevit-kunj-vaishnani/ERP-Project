@@ -15,6 +15,13 @@ import {customError} from '../../utils/error';
 import {logger} from '../../utils/logger';
 import {error} from 'winston';
 
+/**
+ * get all users ( staff , admin can do )
+ * @param req
+ * @param res
+ * @param next
+ * @returns
+ */
 export const getUsers = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
     const users = await findUsers();
@@ -30,6 +37,13 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction):
   }
 };
 
+/**
+ * create new user ( only admin can do )
+ * @param req
+ * @param res
+ * @param next
+ * @returns
+ */
 export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
     // this function will check whether user already exists or not
@@ -42,11 +56,18 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
     return res.status(200).send({success: true, data: user});
   } catch (err) {
-    logger.error(`Error in add ${err}`);
+    logger.error(`Error in adding User = ${err}`);
     next(err);
   }
 };
 
+/**
+ * get 1 user by id ( staff , admin can do )
+ * @param req
+ * @param res
+ * @param next
+ * @returns
+ */
 export const getUserById = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
     const user = await findUserById(req.params.id);
@@ -63,10 +84,16 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
   }
 };
 
-// only password can be updated ( by staff , admin )
+/**
+ * find user by id & update only password field ( staff , admin can do )
+ * @param req
+ * @param res
+ * @param next
+ * @returns
+ */
 export const getUserByIdAndUpdate = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
-    const {_id} = req['data'];
+    const {_id} = req['data']; // console.log(req['data']); { _id: '653bb0216c68fc31a1b2138a', role: 'STAFF'}
     const user = await findUserByIdAndUpdate(_id);
 
     // if (!user) {
@@ -104,7 +131,13 @@ export const getUserByIdAndUpdate = async (req: Request, res: Response, next: Ne
   }
 };
 
-// any field can be updated (by admin only)
+/**
+ * find user by id & update any field ( admin only can do )
+ * @param req
+ * @param res
+ * @param next
+ * @returns
+ */
 export const getUserByIdAndUpdateAll = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
     // const {_id} = req['data'];
@@ -131,6 +164,13 @@ export const getUserByIdAndUpdateAll = async (req: Request, res: Response, next:
   }
 };
 
+/**
+ * find user by id & delete ( admin can do )
+ * @param req
+ * @param res
+ * @param next
+ * @returns
+ */
 export const getUserByIdAndDelete = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
     const user = await findUserByIdAndDelete(req.params.id);
@@ -148,7 +188,14 @@ export const getUserByIdAndDelete = async (req: Request, res: Response, next: Ne
   }
 };
 
-// for login through email and password
+/**
+ * user login ( any one can do )
+ * @param req
+ * @param res
+ * @param next
+ * @returns
+ */
+
 // findByCredentials is function we have made so we have to write static
 export const userLogin = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
@@ -177,7 +224,13 @@ export const userLogin = async (req: Request, res: Response, next: NextFunction)
   }
 };
 
-// logout user from 1 device
+/**
+ * user logout ( who is login )
+ * @param req
+ * @param res
+ * @param next
+ * @returns
+ */
 export const logoutUser = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
     const {_id} = req['data'];
@@ -196,10 +249,15 @@ export const logoutUser = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-// fetch information of login user
+/**
+ * myself ( who is login )
+ * @param req
+ * @param res
+ * @param next
+ * @returns
+ */
 export const myself = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
-    logger.warn('hi');
     const {_id} = req['data'];
 
     const user = await findUserById(_id);
