@@ -1,9 +1,10 @@
+/* eslint-disable prettier/prettier */
 import {User} from './user.model';
 import {IUser} from '../../interfaces';
 import {customError} from '../../utils/error';
 import {logger} from '../../utils/logger';
 
-// find all users from database
+// get all users =
 export const findUsers = async (): Promise<IUser[]> => {
   try {
     return await User.find();
@@ -13,7 +14,7 @@ export const findUsers = async (): Promise<IUser[]> => {
   }
 };
 
-// create user and add it into database
+// create user =
 export const addUser = async (user: IUser): Promise<object> => {
   try {
     return await User.create(user);
@@ -23,7 +24,7 @@ export const addUser = async (user: IUser): Promise<object> => {
   }
 };
 
-// find 1 user by id
+// find 1 user by id =
 export const findUserById = async (_id): Promise<IUser> => {
   try {
     return await User.findById(_id);
@@ -33,7 +34,7 @@ export const findUserById = async (_id): Promise<IUser> => {
   }
 };
 
-// find 1 user by id and update   (no need of this method. we would have used above method only in controller for updating user but then also done)
+// find 1 USER by id and update =
 export const findUserByIdAndUpdate = async (_id): Promise<IUser> => {
   try {
     return await User.findByIdAndUpdate(_id);
@@ -43,7 +44,7 @@ export const findUserByIdAndUpdate = async (_id): Promise<IUser> => {
   }
 };
 
-// find 1 user by id and delete
+// find 1 USER by id and delete =
 export const findUserByIdAndDelete = async (_id): Promise<IUser> => {
   try {
     return await User.findByIdAndDelete(_id);
@@ -53,7 +54,8 @@ export const findUserByIdAndDelete = async (_id): Promise<IUser> => {
   }
 };
 
-// find user by email (for login)
+// find user by email =
+// (for login)
 export const findUserByEmail = async (email): Promise<IUser> => {
   try {
     return await User.findOne({email: email});
