@@ -2,10 +2,19 @@ import {Department} from './department.model';
 import {IDepartment} from '../../interfaces';
 import {customError} from '../../utils/error';
 import {logger} from '../../utils/logger';
+import {Student} from '../Student/student.model';
 
 export const findDepartments = async (): Promise<IDepartment[]> => {
   try {
     return await Department.find();
+  } catch (error) {
+    throw customError(500, error);
+  }
+};
+
+export const deleteAllStudent = async (id): Promise<void> => {
+  try {
+    const student = await Student.deleteMany({departmentId: id});
   } catch (error) {
     throw customError(500, error);
   }

@@ -4,7 +4,8 @@ import {
   findDepartments,
   addDepartment,
   findDepartmentByIdAndUpdate,
-  findDepartmentByIdAndDelete
+  findDepartmentByIdAndDelete,
+  deleteAllStudent
 } from './department.services';
 import {customError} from '../../utils/error';
 import {Request, Response, NextFunction} from 'express';
@@ -110,6 +111,7 @@ export const getDepartmentByIDAndDelete = async (
     const department = await findDepartmentByIdAndDelete(req.params.id);
     logger.info(`${department.name} is now deleted from database`);
 
+    await deleteAllStudent(req.params.id);
     return res.status(200).send({success: true, data: department || 'no department available'});
   } catch (error) {
     logger.error(`Error in deleting department ${error}`);

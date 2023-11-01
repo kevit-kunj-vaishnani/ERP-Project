@@ -28,6 +28,7 @@ export interface IDepartment extends Document {
   initials: string;
   availableSeats: number;
   occupiedSeats: number;
+  batch: number;
 }
 
 export interface IError {

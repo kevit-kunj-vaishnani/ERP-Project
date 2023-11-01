@@ -16,7 +16,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const privateKey = fs.readFileSync(join(__dirname, '../../keys/private.key'));
     const obj = jwt.verify(token, privateKey);
-    // console.log(typeof obj);
+    // console.log(obj);
     // console.log(obj) = { _id: '653bb0216c68fc31a1b2138a', role: 'STAFF', iat: 1698640811 }
     // const {_id, role} = obj;
 
@@ -40,6 +40,6 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
     next();
   } catch (error) {
     logger.error(`Error occurred while authentication - ${error}`);
-    next(error);
+    next(customError(401, error));
   }
 };

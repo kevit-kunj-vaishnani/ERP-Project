@@ -10,13 +10,14 @@ import {
   findStudentByIdAndUpdate,
   findStudentByIdAndDelete,
   findStudentByEmail,
-  increase_occupiedSeats,
-  decrease_occupiedSeats
+  increaseSeatCount,
+  decrease_seatOccupied,
+  checkSeatCount,
+  findOldDepartment,
+  checkNewDepartment
 } from './student.services';
-import {findDepartmentById} from '../Department/department.services';
 import {customError} from '../../utils/error';
 import {logger} from '../../utils/logger';
-import {Department} from '../Department/department.model';
 import {validationResult} from 'express-validator';
 
 /**
@@ -44,8 +45,13 @@ export const getStudents = async (req: Request, res: Response, next: NextFunctio
  */
 export const createStudent = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
-    await increase_occupiedSeats(req.body.departmentId);
+    const {departmentId} = req.body;
+
+    await checkSeatCount(departmentId);
+
     const student = await addStudent(req.body);
+
+    await increaseSeatCount(departmentId);
 
     return res.status(200).send({success: true, data: student});
   } catch (error) {
@@ -115,7 +121,7 @@ export const getStudentByIdAndDelete = async (req: Request, res: Response, next:
   try {
     const student = await findStudentByIdAndDelete(req.params.id);
 
-    await decrease_occupiedSeats(student.departmentId);
+    await decrease_seatOccupied(student.departmentId);
     logger.info(`${student.name} is now deleted from database`);
 
     return res.status(200).send({success: true, data: student || 'no student available'});
@@ -215,7 +221,7 @@ export const getStudentByIdAndUpdateAll = async (
   next: NextFunction
 ): Promise<Response> => {
   try {
-    const student = await findStudentByIdAndUpdate(req.params.id);
+    const student = await findStudentById(req.params.id);
 
     const error = validationResult(req);
 
@@ -223,13 +229,29 @@ export const getStudentByIdAndUpdateAll = async (
       throw customError(400, error.array());
     }
 
-    for (const fieldName in req.body) {
-      student[fieldName] = req.body[fieldName];
+    // const oldDepartment = await findOldDepartment(student.departmentId);
+    if (req.body.departmentId) {
+      await checkNewDepartment(req.body.departmentId);
+      await decrease_seatOccupied(student.departmentId);
+
+      for (const fieldName in req.body) {
+        student[fieldName] = req.body[fieldName];
+      }
+
+      await increaseSeatCount(student.departmentId);
+
+      await student.save();
+
+      return res.status(200).send({success: true, data: student || 'no student available'});
+    } else {
+      for (const fieldName in req.body) {
+        student[fieldName] = req.body[fieldName];
+      }
+
+      await student.save();
+
+      return res.status(200).send({success: true, data: student || 'no student available'});
     }
-
-    await student.save();
-
-    return res.status(200).send({success: true, data: student || 'no student available'});
   } catch (error) {
     logger.error(`Error in update ${error}`);
     next(error);

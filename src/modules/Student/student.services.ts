@@ -6,37 +6,65 @@ import {logger} from '../../utils/logger';
 import {Department} from '../Department/department.model';
 import {findDepartmentById} from '../Department/department.services';
 
-// operation for increase occupied seat count function
-export const increase_occupiedSeats = async (departmentId): Promise<void> => {
+// function to check is occupied seats are available
+export const checkSeatCount = async (departmentId): Promise<void> => {
   try {
-    const temporary = await findDepartmentById(departmentId);
-
-    if (temporary.occupiedSeats >= temporary.availableSeats) {
+    const department = await findDepartmentById(departmentId);
+    if (department.occupiedSeats >= department.availableSeats) {
       throw 'seats not available';
     }
-
-    temporary.occupiedSeats = temporary.occupiedSeats + 1;
-
-    await temporary.save();
-    logger.info(temporary);
   } catch (error) {
     throw customError(500, error);
   }
 };
 
-// decrease seats occupied seat count function
-export const decrease_occupiedSeats = async (departmentId): Promise<void> => {
+// find department from id given of student =
+export const findOldDepartment = async (oldDepartmentId): Promise<object> => {
   try {
-    const temporary = await findDepartmentById(departmentId);
+    return await Department.findOne({_id: oldDepartmentId});
+  } catch (error) {
+    throw customError(500, error);
+  }
+};
 
-    if (temporary.occupiedSeats <= 0) {
+// check whethere updated department has vacancy in occupied seats.
+export const checkNewDepartment = async (newDepartmentId): Promise<void> => {
+  try {
+    const newDepartment = await Department.findOne({_id: newDepartmentId});
+    logger.info(newDepartment);
+    if (newDepartment.occupiedSeats >= newDepartment.availableSeats) {
+      throw 'seats not available';
+    }
+  } catch (error) {
+    throw customError(500, error);
+  }
+};
+
+// function to increase occupied seats
+export const increaseSeatCount = async (departmentId): Promise<void> => {
+  try {
+    const department = await findDepartmentById(departmentId);
+    department.occupiedSeats++;
+
+    await department.save();
+  } catch (error) {
+    throw customError(500, 'Error in increasing count');
+  }
+};
+
+// function to decrease occupied seats
+export const decrease_seatOccupied = async (departmentId): Promise<void> => {
+  try {
+    const department = await findDepartmentById(departmentId);
+
+    if (department.occupiedSeats <= 0) {
       throw 'seats already 0';
     }
 
-    temporary.occupiedSeats = temporary.occupiedSeats - 1;
+    department.occupiedSeats = department.occupiedSeats - 1;
+    logger.info(department.occupiedSeats);
 
-    await temporary.save();
-    logger.info(temporary);
+    await department.save();
   } catch (error) {
     throw customError(500, error);
   }
