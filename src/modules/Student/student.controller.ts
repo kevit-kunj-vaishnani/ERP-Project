@@ -9,10 +9,16 @@ import {
   findStudentById,
   findStudentByIdAndUpdate,
   findStudentByIdAndDelete,
-  findStudentByEmail
+  findStudentByEmail,
+  increaseSeatCount,
+  decrease_seatOccupied,
+  checkSeatCount,
+  findOldDepartment,
+  checkNewDepartment
 } from './student.services';
 import {customError} from '../../utils/error';
 import {logger} from '../../utils/logger';
+import {validationResult} from 'express-validator';
 
 /**
  * get all students ( staff , admin can do )
@@ -39,7 +45,14 @@ export const getStudents = async (req: Request, res: Response, next: NextFunctio
  */
 export const createStudent = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
   try {
+    const {departmentId} = req.body;
+
+    await checkSeatCount(departmentId);
+
     const student = await addStudent(req.body);
+
+    await increaseSeatCount(departmentId);
+
     return res.status(200).send({success: true, data: student});
   } catch (error) {
     logger.error(`Error in add STUDENT = ${error}`);
@@ -75,12 +88,16 @@ export const getStudentAndUpdate = async (req: Request, res: Response, next: Nex
     const {_id} = req['data'];
     const student = await findStudentByIdAndUpdate(_id);
 
-    logger.info(student);
+    const error = validationResult(req);
 
-    if (!req.body.password) {
-      logger.error(`you can update only password field.`);
-      throw customError(400, 'you can update only password field. ');
+    if (!error.isEmpty()) {
+      throw customError(400, error.array());
     }
+
+    // if (!req.body.password) {
+    //   logger.error(`you can update only password field.`);
+    //   throw customError(400, 'you can update only password field. ');
+    // }
 
     student.password = req.body.password;
 
@@ -104,6 +121,7 @@ export const getStudentByIdAndDelete = async (req: Request, res: Response, next:
   try {
     const student = await findStudentByIdAndDelete(req.params.id);
 
+    await decrease_seatOccupied(student.departmentId);
     logger.info(`${student.name} is now deleted from database`);
 
     return res.status(200).send({success: true, data: student || 'no student available'});
@@ -203,19 +221,37 @@ export const getStudentByIdAndUpdateAll = async (
   next: NextFunction
 ): Promise<Response> => {
   try {
-    const student = await findStudentByIdAndUpdate(req.params.id);
+    const student = await findStudentById(req.params.id);
 
-    logger.info(`old student = ${student}`);
+    const error = validationResult(req);
 
-    for (const i in req.body) {
-      student[i] = req.body[i];
+    if (!error.isEmpty()) {
+      throw customError(400, error.array());
     }
 
-    logger.info(`updated student = ${student}`);
+    // const oldDepartment = await findOldDepartment(student.departmentId);
+    if (req.body.departmentId) {
+      await checkNewDepartment(req.body.departmentId);
+      await decrease_seatOccupied(student.departmentId);
 
-    await student.save();
+      for (const fieldName in req.body) {
+        student[fieldName] = req.body[fieldName];
+      }
 
-    return res.status(200).send({success: true, data: student || 'no student available'});
+      await increaseSeatCount(student.departmentId);
+
+      await student.save();
+
+      return res.status(200).send({success: true, data: student || 'no student available'});
+    } else {
+      for (const fieldName in req.body) {
+        student[fieldName] = req.body[fieldName];
+      }
+
+      await student.save();
+
+      return res.status(200).send({success: true, data: student || 'no student available'});
+    }
   } catch (error) {
     logger.error(`Error in update ${error}`);
     next(error);

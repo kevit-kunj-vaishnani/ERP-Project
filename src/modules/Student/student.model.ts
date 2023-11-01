@@ -27,8 +27,8 @@ const studentSchema = new Schema({
     required: true
   },
 
-  department: {
-    type: String,
+  departmentId: {
+    type: Schema.Types.ObjectId,
     trim: true,
     required: true
     // ref: ''
@@ -36,7 +36,7 @@ const studentSchema = new Schema({
 
   role: {
     type: String,
-    required: true
+    default: Roles.STUDENT
   },
 
   authToken: {
