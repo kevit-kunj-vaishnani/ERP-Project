@@ -3,7 +3,7 @@ import {customError} from '../utils/error';
 
 export const authorization = (roles: string[]) => {
   return (req, res, next) => {
-    const {role} = req['data'];
+    const {role} = req['data']; //here we are fetching role field from req['data'] object
     // logger.warn(roles);
     if (!roles.includes(role)) {
       logger.error('user does not have right');

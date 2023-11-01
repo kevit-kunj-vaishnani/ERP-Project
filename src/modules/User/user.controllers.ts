@@ -149,8 +149,8 @@ export const getUserByIdAndUpdateAll = async (req: Request, res: Response, next:
 
     logger.info(`old user = ${user}`);
 
-    for (const i in req.body) {
-      user[i] = req.body[i];
+    for (const fieldName in req.body) {
+      user[fieldName] = req.body[fieldName];
     }
 
     logger.info(`updated user = ${user}`);

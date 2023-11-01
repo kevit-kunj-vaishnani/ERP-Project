@@ -7,7 +7,7 @@ export interface IUser extends Document {
   email: string;
   phone: number;
   password: string;
-  department: string;
+  departmentId: string;
   authToken: string;
 }
 
@@ -17,10 +17,17 @@ export interface IStudent extends Document {
   email: string;
   phone: number;
   password: string;
-  department: string;
+  departmentId: string;
   authToken: string;
   sem: number;
   batch: number;
+}
+
+export interface IDepartment extends Document {
+  name: string;
+  initials: string;
+  availableSeats: number;
+  occupiedSeats: number;
 }
 
 export interface IError {

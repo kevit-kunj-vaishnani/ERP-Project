@@ -3,6 +3,44 @@ import {Student} from './student.model';
 import {IStudent} from '../../interfaces';
 import {customError} from '../../utils/error';
 import {logger} from '../../utils/logger';
+import {Department} from '../Department/department.model';
+import {findDepartmentById} from '../Department/department.services';
+
+// operation for increase occupied seat count function
+export const increase_occupiedSeats = async (departmentId): Promise<void> => {
+  try {
+    const temporary = await findDepartmentById(departmentId);
+
+    if (temporary.occupiedSeats >= temporary.availableSeats) {
+      throw 'seats not available';
+    }
+
+    temporary.occupiedSeats = temporary.occupiedSeats + 1;
+
+    await temporary.save();
+    logger.info(temporary);
+  } catch (error) {
+    throw customError(500, error);
+  }
+};
+
+// decrease seats occupied seat count function
+export const decrease_occupiedSeats = async (departmentId): Promise<void> => {
+  try {
+    const temporary = await findDepartmentById(departmentId);
+
+    if (temporary.occupiedSeats <= 0) {
+      throw 'seats already 0';
+    }
+
+    temporary.occupiedSeats = temporary.occupiedSeats - 1;
+
+    await temporary.save();
+    logger.info(temporary);
+  } catch (error) {
+    throw customError(500, error);
+  }
+};
 
 // get all Students =
 export const findStudents = async (): Promise<IStudent[]> => {

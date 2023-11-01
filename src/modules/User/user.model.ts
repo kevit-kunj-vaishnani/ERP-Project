@@ -31,10 +31,10 @@ const userSchema = new mongoose.Schema({
     required: true
   },
 
-  department: {
-    type: String,
-    trim: true,
-    required: true
+  departmentId: {
+    type: Schema.Types.ObjectId,
+    trim: true
+    // required: true
     // ref: ''
   },
 

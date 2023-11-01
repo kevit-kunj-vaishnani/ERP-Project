@@ -19,6 +19,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
     // console.log(typeof obj);
     // console.log(obj) = { _id: '653bb0216c68fc31a1b2138a', role: 'STAFF', iat: 1698640811 }
     // const {_id, role} = obj;
+
     const _id = obj['_id'];
     const role = obj['role'];
 
