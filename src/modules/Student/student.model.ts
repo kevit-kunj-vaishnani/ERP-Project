@@ -46,11 +46,6 @@ const studentSchema = new Schema({
   sem: {
     type: Number,
     required: true
-  },
-
-  batch: {
-    type: Number,
-    required: true
   }
 });
 

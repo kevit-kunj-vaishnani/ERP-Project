@@ -20,7 +20,6 @@ export interface IStudent extends Document {
   departmentId: string;
   authToken: string;
   sem: number;
-  batch: number;
 }
 
 export interface IDepartment extends Document {
