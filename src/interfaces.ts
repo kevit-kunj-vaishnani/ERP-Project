@@ -31,6 +31,12 @@ export interface IDepartment extends Document {
   batch: number;
 }
 
+export interface IAttendance extends Document {
+  studentId: string;
+  date: Date;
+  isPresent: boolean;
+}
+
 export interface IError {
   success: string;
   error: Error;

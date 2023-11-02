@@ -4,20 +4,15 @@ import {
   findDepartments,
   addDepartment,
   findDepartmentByIdAndUpdate,
-  findDepartmentByIdAndDelete,
-  deleteAllStudent
+  findDepartmentByIdAndDelete
 } from './department.services';
-import {customError} from '../../utils/error';
 import {Request, Response, NextFunction} from 'express';
-import bcrypt from 'bcryptjs';
-import fs from 'fs';
-import jwt from 'jsonwebtoken'; // it is used to sign a JSON Web Token (JWT) using the RSA256 algorithm
-import {join} from 'path';
+
 import {logger} from '../../utils/logger';
 
 /**
  * get all departments (Admin can do it.)
- *  @param {Request} req => Express Request
+ * @param {Request} req => Express Request
  * @param {Response} res => Express Response
  * @param {NextFunction} next => Express NextFunction
  * @returns {Promise<Response>} => promise with response
@@ -50,7 +45,7 @@ export const createDepartment = async (req: Request, res: Response, next: NextFu
 
 /**
  * get 1 department by id (Admin can do it.)
- *  @param {Request} req => Express Request
+ * @param {Request} req => Express Request
  * @param {Response} res => Express Response
  * @param {NextFunction} next => Express NextFunction
  * @returns {Promise<Response>} => promise with response
@@ -67,7 +62,7 @@ export const getDepartmentByID = async (req: Request, res: Response, next: NextF
 
 /**
  * find department by id & update any field (Admin can do it.)
- *  @param {Request} req => Express Request
+ * @param {Request} req => Express Request
  * @param {Response} res => Express Response
  * @param {NextFunction} next => Express NextFunction
  * @returns {Promise<Response>} => promise with response
@@ -97,7 +92,7 @@ export const getDepartmentByIdAndUpdate = async (
 
 /**
  * find department by id & delete (Admin can do it.)
- *  @param {Request} req => Express Request
+ * @param {Request} req => Express Request
  * @param {Response} res => Express Response
  * @param {NextFunction} next => Express NextFunction
  * @returns {Promise<Response>} => promise with response
@@ -111,7 +106,6 @@ export const getDepartmentByIDAndDelete = async (
     const department = await findDepartmentByIdAndDelete(req.params.id);
     logger.info(`${department.name} is now deleted from database`);
 
-    await deleteAllStudent(req.params.id);
     return res.status(200).send({success: true, data: department || 'no department available'});
   } catch (error) {
     logger.error(`Error in deleting department ${error}`);

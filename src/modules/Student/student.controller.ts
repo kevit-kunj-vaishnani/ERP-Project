@@ -13,8 +13,8 @@ import {
   increaseSeatCount,
   decrease_seatOccupied,
   checkSeatCount,
-  findOldDepartment,
-  checkNewDepartment
+  checkNewDepartment,
+  deleteAttendance
 } from './student.services';
 import {customError} from '../../utils/error';
 import {logger} from '../../utils/logger';
@@ -122,6 +122,7 @@ export const getStudentByIdAndDelete = async (req: Request, res: Response, next:
     const student = await findStudentByIdAndDelete(req.params.id);
 
     await decrease_seatOccupied(student.departmentId);
+    await deleteAttendance(student._id);
     logger.info(`${student.name} is now deleted from database`);
 
     return res.status(200).send({success: true, data: student || 'no student available'});

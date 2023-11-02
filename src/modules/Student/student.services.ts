@@ -5,33 +5,22 @@ import {customError} from '../../utils/error';
 import {logger} from '../../utils/logger';
 import {Department} from '../Department/department.model';
 import {findDepartmentById} from '../Department/department.services';
+import {Attendance} from '../Attendance/attendance.model';
 
-// function to check is occupied seats are available
-export const checkSeatCount = async (departmentId): Promise<void> => {
+// when student gets deleted his attendance should get deleted
+export const deleteAttendance = async (student_id): Promise<void> => {
   try {
-    const department = await findDepartmentById(departmentId);
-    if (department.occupiedSeats >= department.availableSeats) {
-      throw 'seats not available';
-    }
+    await Attendance.deleteMany({studentId: student_id});
   } catch (error) {
     throw customError(500, error);
   }
 };
 
-// find department from id given of student =
-export const findOldDepartment = async (oldDepartmentId): Promise<object> => {
-  try {
-    return await Department.findOne({_id: oldDepartmentId});
-  } catch (error) {
-    throw customError(500, error);
-  }
-};
-
-// check whethere updated department has vacancy in occupied seats.
+// check whethere updated department has vacancy in occupied seats. (for admin when he update student branch in getStudentByIdAndUpdateAll )
 export const checkNewDepartment = async (newDepartmentId): Promise<void> => {
   try {
     const newDepartment = await Department.findOne({_id: newDepartmentId});
-    logger.info(newDepartment);
+
     if (newDepartment.occupiedSeats >= newDepartment.availableSeats) {
       throw 'seats not available';
     }
@@ -40,7 +29,20 @@ export const checkNewDepartment = async (newDepartmentId): Promise<void> => {
   }
 };
 
-// function to increase occupied seats
+// function to check is occupied seats are available (for admin when he add student )
+export const checkSeatCount = async (departmentId): Promise<void> => {
+  try {
+    const department = await findDepartmentById(departmentId);
+
+    if (department.occupiedSeats >= department.availableSeats) {
+      throw 'seats not available';
+    }
+  } catch (error) {
+    throw customError(500, error);
+  }
+};
+
+// function to increase occupied seats ( for admin when he add student )
 export const increaseSeatCount = async (departmentId): Promise<void> => {
   try {
     const department = await findDepartmentById(departmentId);
@@ -52,7 +54,7 @@ export const increaseSeatCount = async (departmentId): Promise<void> => {
   }
 };
 
-// function to decrease occupied seats
+// function to decrease occupied seats ( for admin when he add student )
 export const decrease_seatOccupied = async (departmentId): Promise<void> => {
   try {
     const department = await findDepartmentById(departmentId);
