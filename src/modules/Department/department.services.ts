@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {Department} from './department.model';
 import {IDepartment} from '../../interfaces';
 import {customError} from '../../utils/error';
@@ -59,4 +60,320 @@ export const findDepartmentByIdAndUpdate = async (_id): Promise<IDepartment> => 
     throw customError(500, error);
   }
 };
-// file over
+
+export const aggregation1 = async () => {
+  try {
+    const pipeline: any = [
+      {
+        $group: {
+          _id: '$batch',
+          totalStudents: {
+            $sum: '$occupiedSeats'
+          },
+          branches: {
+            $push: {
+              initials: '$initials',
+              occupiedSeats: '$occupiedSeats'
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          dept: {
+            $map: {
+              input: '$branches',
+              as: 'data',
+              in: {
+                k: '$$data.initials',
+                v: '$$data.occupiedSeats'
+              }
+            }
+          },
+          totalStudents: 1
+        }
+      },
+      {
+        $project: {
+          year: '$_id',
+          branches: {
+            $arrayToObject: '$dept'
+          },
+          totalStudents: 1
+        }
+      },
+      {
+        $sort: {
+          totalStudents: -1
+        }
+      }
+    ];
+
+    // Execute the aggregation pipeline
+    return await Department.aggregate(pipeline);
+  } catch (error) {
+    throw customError(500, 'Error aggregating departments: ' + error.message);
+  }
+};
+
+export const aggregation2 = async (obj) => {
+  try {
+    const pipeline: any = [
+      {
+        $lookup: {
+          from: 'students',
+          localField: '_id',
+          foreignField: 'departmentId',
+          as: 'result1'
+        }
+      },
+      {
+        $unwind: {
+          path: '$result1'
+        }
+      },
+      {
+        $project: {
+          departmentName: '$name',
+          initials: 1,
+          batch: 1,
+          sid: '$result1._id',
+          sName: '$result1.name',
+          Sem: '$result1.sem'
+        }
+      },
+      {
+        $lookup: {
+          from: 'attendances',
+          localField: 'sid',
+          foreignField: 'studentId',
+          as: 'result2'
+        }
+      },
+      {
+        $unwind: {
+          path: '$result2'
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          did: '$_id',
+          departmentName: '$departmentName',
+          initials: 1,
+          batch: 1,
+          sid: '$sid',
+          sName: '$sName',
+          Sem: '$Sem',
+          date: '$result2.date',
+          isPresent: '$result2.isPresent'
+        }
+      },
+      {
+        $match: {
+          date: new Date(obj.date),
+          isPresent: false
+        }
+      }
+    ];
+
+    if (obj.batch) {
+      pipeline.push({
+        $match: {
+          batch: obj.batch
+        }
+      });
+    }
+
+    if (obj.Sem) {
+      pipeline.push({
+        $match: {
+          Sem: obj.Sem
+        }
+      });
+    }
+
+    if (obj.departmentName) {
+      pipeline.push({
+        $match: {
+          departmentName: obj.departmentName
+        }
+      });
+    }
+
+    return await Department.aggregate(pipeline);
+  } catch (err) {
+    throw customError(500, 'Error in 2nd');
+  }
+};
+
+export const aggregation3 = (obj) => {
+  try {
+    const pipeline: any = [
+      {
+        $lookup: {
+          from: 'students',
+          localField: '_id',
+          foreignField: 'departmentId',
+          as: 'r1'
+        }
+      },
+      {
+        $unwind: {
+          path: '$r1'
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          did: '$_id',
+          sName: '$r1.name',
+          dname: '$name',
+          batch: 1,
+          sem: '$r1.sem',
+          sid: '$r1._id'
+        }
+      },
+      {
+        $lookup: {
+          from: 'attendances',
+          localField: 'sid',
+          foreignField: 'studentId',
+          as: 'r2'
+        }
+      },
+      {
+        $unwind: {
+          path: '$r2'
+        }
+      },
+      {
+        $project: {
+          batch: 1,
+          did: 1,
+          sName: 1,
+          dname: 1,
+          sem: 1,
+          date: '$r2.date',
+          isPresent: '$r2.isPresent'
+        }
+      },
+      {
+        $match: {
+          date: {
+            $lte: new Date(obj.date)
+          }
+        }
+      },
+      {
+        $group: {
+          _id: '$sName',
+          total: {
+            $push: '$$ROOT'
+          }
+        }
+      },
+      {
+        $addFields: {
+          totaldays: {
+            $size: '$total'
+          }
+        }
+      },
+      {
+        $unwind: {
+          path: '$total'
+        }
+      },
+      {
+        $project: {
+          sName: '$total.sName',
+          dname: '$total.dname',
+          batch: '$total.batch',
+          sem: '$total.sem',
+          date: '$total.date',
+          isPresent: '$total.isPresent',
+          totaldays: 1
+        }
+      },
+      {
+        $match: {
+          isPresent: false
+        }
+      },
+      {
+        $group: {
+          _id: '$sName',
+          data: {
+            $push: '$$ROOT'
+          },
+          absentdays: {
+            $sum: 1
+          }
+        }
+      },
+      {
+        $project: {
+          data: {
+            $arrayElemAt: ['$data', 0]
+          },
+          absentdays: 1,
+          totaldays: 1
+        }
+      },
+      {
+        $project: {
+          sName: '$data.sName',
+          dname: '$data.dname',
+          batch: '$data.batch',
+          sem: '$data.sem',
+          totaldays: '$data.totaldays',
+          absentdays: 1,
+          absence_percentage: {
+            $multiply: [
+              {
+                $divide: ['$absentdays', '$data.totaldays']
+              },
+              100
+            ]
+          }
+        }
+      },
+      {
+        $match: {
+          absence_percentage: {
+            $lte: 75
+          }
+        }
+      }
+    ];
+
+    if (obj.batch) {
+      pipeline.push({
+        $match: {
+          batch: obj.batch
+        }
+      });
+    }
+
+    if (obj.Sem) {
+      pipeline.push({
+        $match: {
+          sem: obj.sem
+        }
+      });
+    }
+
+    if (obj.departmentName) {
+      pipeline.push({
+        $match: {
+          dname: obj.dname
+        }
+      });
+    }
+
+    return Department.aggregate(pipeline);
+  } catch (error) {
+    throw customError(500, 'Error in 3rd: ' + error.message);
+  }
+};

@@ -4,7 +4,10 @@ import {
   findDepartments,
   addDepartment,
   findDepartmentByIdAndUpdate,
-  findDepartmentByIdAndDelete
+  findDepartmentByIdAndDelete,
+  aggregation1,
+  aggregation2,
+  aggregation3
 } from './department.services';
 import {Request, Response, NextFunction} from 'express';
 
@@ -110,5 +113,40 @@ export const getDepartmentByIDAndDelete = async (
   } catch (error) {
     logger.error(`Error in deleting department ${error}`);
     next(error);
+  }
+};
+
+/**
+ * get 1 department by id (Admin can do it.)
+ * @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
+ * @returns {Promise<Response>} => promise with response
+ */
+export const q1 = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const department = await aggregation1();
+    return res.status(200).send({success: true, data: department || 'no department available'});
+  } catch (error) {
+    logger.error(`Error in Analysis = ${error}`);
+    next(error);
+  }
+};
+
+export const q2 = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data = await aggregation2(req.body);
+    res.status(200).send({success: true, data: data});
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const q3 = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data = await aggregation3(req.body);
+    res.status(200).send({success: true, data: data});
+  } catch (err) {
+    next(err);
   }
 };
