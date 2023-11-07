@@ -7,7 +7,8 @@ import {
   findDepartmentByIdAndDelete,
   aggregation1,
   aggregation2,
-  aggregation3
+  aggregation3,
+  aggregation4
 } from './department.services';
 import {Request, Response, NextFunction} from 'express';
 
@@ -145,6 +146,15 @@ export const q2 = async (req: Request, res: Response, next: NextFunction) => {
 export const q3 = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = await aggregation3(req.body);
+    res.status(200).send({success: true, data: data});
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const q4 = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const data = await aggregation4(req.body);
     res.status(200).send({success: true, data: data});
   } catch (err) {
     next(err);

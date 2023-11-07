@@ -377,3 +377,82 @@ export const aggregation3 = (obj) => {
     throw customError(500, 'Error in 3rd: ' + error.message);
   }
 };
+
+export const aggregation4 = async (obj) => {
+  try {
+    const pipeline: any = [
+      {
+        $match: {
+          batch: obj.batch
+        }
+      },
+      {
+        $group: {
+          _id: '$batch',
+          department: {
+            $push: {
+              initials: '$initials',
+              data: {
+                totalStudentsNow: '$occupiedSeats',
+                totalStudentsIntake: '$availableSeats',
+                availableIntake: {
+                  $subtract: ['$availableSeats', '$occupiedSeats']
+                }
+              }
+            }
+          },
+          totalStudentsNow: {
+            $sum: '$occupiedSeats'
+          },
+          totalStudentsIntake: {
+            $sum: '$availableSeats'
+          }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          batch: '$_id',
+          data: {
+            $map: {
+              input: '$department',
+              as: 'departmentData',
+              in: {
+                k: '$$departmentData.initials',
+                v: '$$departmentData.data'
+              }
+            }
+          },
+          totalStudentsNow: 1,
+          totalStudentsIntake: 1,
+          availableIntake: {
+            $subtract: ['$totalStudentsIntake', '$totalStudentsNow']
+          }
+        }
+      },
+      {
+        $project: {
+          batch: 1,
+          department: {
+            $arrayToObject: '$data'
+          },
+          totalStudentsNow: 1,
+          totalStudentsIntake: 1,
+          availableIntake: 1
+        }
+      }
+    ];
+
+    if (obj.department) {
+      pipeline.unshift({
+        $match: {
+          name: obj.department
+        }
+      });
+    }
+
+    return await Department.aggregate(pipeline);
+  } catch (error) {
+    throw customError(500, 'Error in 4th: ' + error.message);
+  }
+};
