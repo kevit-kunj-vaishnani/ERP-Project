@@ -118,11 +118,10 @@ export const getDepartmentByIDAndDelete = async (
 };
 
 /**
- * get 1 department by id (Admin can do it.)
+ * q1
  * @param {Request} req => Express Request
  * @param {Response} res => Express Response
  * @param {NextFunction} next => Express NextFunction
- * @returns {Promise<Response>} => promise with response
  */
 export const q1 = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -134,6 +133,12 @@ export const q1 = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+/**
+ * q2
+ * @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
+ */
 export const q2 = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = await aggregation2(req.body);
@@ -143,6 +148,12 @@ export const q2 = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+/**
+ * q3
+ * @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
+ */
 export const q3 = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = await aggregation3(req.body);
@@ -152,6 +163,12 @@ export const q3 = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+/**
+ * q4
+ * @param {Request} req => Express Request
+ * @param {Response} res => Express Response
+ * @param {NextFunction} next => Express NextFunction
+ */
 export const q4 = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const data = await aggregation4(req.body);

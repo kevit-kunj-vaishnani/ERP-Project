@@ -61,6 +61,7 @@ export const findDepartmentByIdAndUpdate = async (_id): Promise<IDepartment> => 
   }
 };
 
+// 1 query
 export const aggregation1 = async () => {
   try {
     const pipeline: any = [
@@ -116,6 +117,7 @@ export const aggregation1 = async () => {
   }
 };
 
+// 2 query
 export const aggregation2 = async (obj) => {
   try {
     const pipeline: any = [
@@ -207,6 +209,7 @@ export const aggregation2 = async (obj) => {
   }
 };
 
+// 3 query
 export const aggregation3 = (obj) => {
   try {
     const pipeline: any = [
@@ -378,6 +381,7 @@ export const aggregation3 = (obj) => {
   }
 };
 
+// 4 query
 export const aggregation4 = async (obj) => {
   try {
     const pipeline: any = [

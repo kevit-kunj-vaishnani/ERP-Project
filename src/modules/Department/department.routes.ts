@@ -16,16 +16,16 @@ import {auth} from '../../middleware/auth';
 const route = 'department';
 export const router = Router();
 
-// department statistics
+// 1 department statistics
 router.get(`/data`, auth, authorization(['ADMIN']), q1);
 
-// absent on specific date
+// 2 absent on specific date
 router.post(`/absent`, auth, authorization(['ADMIN']), q2);
 
-// present lt 75% on specific date
+// 3 present lt 75% on specific date
 router.post(`/absent75`, auth, authorization(['ADMIN']), q3);
 
-// dept data
+// 4 dept data
 router.post(`/dep/data`, auth, authorization(['ADMIN']), q4);
 
 // get all department =
