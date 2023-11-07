@@ -382,11 +382,6 @@ export const aggregation4 = async (obj) => {
   try {
     const pipeline: any = [
       {
-        $match: {
-          batch: obj.batch
-        }
-      },
-      {
         $group: {
           _id: '$batch',
           department: {
@@ -447,6 +442,14 @@ export const aggregation4 = async (obj) => {
       pipeline.unshift({
         $match: {
           name: obj.department
+        }
+      });
+    }
+
+    if (obj.batch) {
+      pipeline.unshift({
+        $match: {
+          batch: obj.batch
         }
       });
     }
