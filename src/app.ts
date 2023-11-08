@@ -10,8 +10,8 @@ import {errorHandler} from './middleware/error-handler';
 const mongoUrl: string = mongoConn.url;
 const databaseName: string = mongoConn.db_name;
 export class App {
-  private app: Application;
-  private routers: Router[];
+  public app: Application;
+  public routers: Router[];
 
   constructor(routers: Router[]) {
     this.app = express();
