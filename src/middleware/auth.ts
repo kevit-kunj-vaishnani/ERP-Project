@@ -10,6 +10,7 @@ import jwt from 'jsonwebtoken';
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.header('Authorization').replace('Bearer ', '');
+
   if (!token) {
     throw customError(401, 'unauth');
   }

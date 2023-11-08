@@ -6,6 +6,6 @@ export const server = {
 };
 
 export const mongoConn = {
-  url: MONGODB_URL || 'mongodb://127.0.0.1:27017/mongodb://127.0.0.1:27017/',
+  url: MONGODB_URL || 'mongodb://127.0.0.1:27017/',
   db_name: DB__NAME || 'ERP_College_Model'
 };
