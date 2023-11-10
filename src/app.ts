@@ -81,6 +81,3 @@ export class App {
     mongoose.connect(`${mongoUrl}${databaseName}`);
   }
 }
-
-
-// add comment for testing
